@@ -53,6 +53,7 @@
         if (IS_ZTAU_DISABLED) return;
         $('#game_navigation_areas ul').prepend(
             '<li><a href="/travel/area/electronic-market">Go to Public Market</a></li>'
+            + '<li><a href="/travel/area/lounge">Lounge</a></li>'
         );
     }
 
