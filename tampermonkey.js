@@ -52,8 +52,9 @@
     function add_extra_nav() {
         if (IS_ZTAU_DISABLED) return;
         $('#game_navigation_areas ul').prepend(
-            '<li><a href="/travel/area/electronic-market">Go to Public Market</a></li>'
-            + '<li><a href="/travel/area/lounge">Lounge</a></li>'
+            '<li><a href="/travel/area/electronic-market">♥ Public Market</a></li>'
+            + '<li><a href="/area/electronic-market/page/1?filter=ration">♥ Rations Market</a></li>'
+            + '<li><a href="/travel/area/lounge">♥ Lounge</a></li>'
         );
     }
 
