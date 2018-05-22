@@ -61,7 +61,7 @@
     function go_to_hotel() {
         if (IS_ZTAU_DISABLED) return;
         $('#game_navigation_areas ul').prepend(
-            '<li><a href="#" id="go_to_hotel">Go to hotel</a></li>'
+            '<li><a href="#" id="go_to_hotel">♥ Go to hotel</a></li>'
         );
         $('#go_to_hotel').click(function(){
             window.location.href = '/area/hotel-rooms/enter-room';
