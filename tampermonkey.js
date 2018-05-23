@@ -111,7 +111,7 @@
         if (IS_ZTAU_DISABLED) return;
         $(['Bank', 'Brig', 'Clones', 'Ship Breaking', 'Gov\'t Center', 'Inn',
           'Market', 'Port', 'Residences', 'Ruins', 'Security', 'Shipyard', 'Employment',
-          'Sick Bay', 'Gym']).each(function(i, el) {
+          'Sick Bay', 'Gym', 'Gaule Embassy', 'Water Plant', 'University']).each(function(i, el) {
             $('.narrative-direction').highlight(el);
         });
     }
