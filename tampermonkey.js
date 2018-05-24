@@ -6,6 +6,7 @@
 // @author       You
 // @match        https://alpha.taustation.space/*
 // @grant        none
+// @require      http://code.jquery.com/jquery-latest.js
 // @require      https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js
 // ==/UserScript==
 
