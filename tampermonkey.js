@@ -6,7 +6,6 @@
 // @author       You
 // @match        https://alpha.taustation.space/*
 // @grant        none
-// @require      http://code.jquery.com/jquery-latest.js
 // @require      https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js
 // ==/UserScript==
 
@@ -41,6 +40,7 @@
     };
 
     var IS_ZTAU_DISABLED = Cookies.get('ztau_disabled') == 'true';
+
     add_missing_discreet();
     expand_discreet_text();
     highlight_locations();
@@ -49,18 +49,19 @@
     go_to_hotel();
     add_extra_nav();
     add_ztau_disabler();
+    setup_search_for_people();
 
     function add_extra_nav() {
         if (IS_ZTAU_DISABLED) return;
         $('#game_navigation_areas ul').prepend(
-            '<li><a href="/travel/area/electronic-market">♥ Public Market</a></li>'
+              '<li><a href="/travel/area/electronic-market">♥ Public Market</a></li>'
             + '<li><a href="/area/electronic-market/page/1?filter=ration">♥ Rations Market</a></li>'
             + '<li><a href="/travel/area/lounge">♥ Lounge</a></li>'
         );
     }
 
     function go_to_hotel() {
-        if (IS_ZTAU_DISABLED) return;
+        if (IS_ZTAU_DISABLED || ! (Cookies.get('ztau_people') === undefined)) return;
         $('#game_navigation_areas ul').prepend(
             '<li><a href="#" id="go_to_hotel">♥ Go to hotel</a></li>'
         );
@@ -148,6 +149,99 @@
         $('#employment_panel ul:first-child li:first-child').append(
             '<div><a href="/travel/area/discreet-work">Find discreet work</a></div>'
         );
+    }
+
+    function search_for_people() {
+        $('#game_navigation_areas ul').prepend(
+            '<li><a href="#" id="people-unsearch">👫 STOP Search for people</a></li>'
+        ).find('#people-unsearch').click(function(){
+            Cookies.remove('ztau_people');
+            $('#people-unsearch').remove();
+        });
+
+        var promise = new Promise(function(resolve, reject) {
+            var interval;
+            interval = setInterval(function() {
+                if ($('.tab-nav-item[aria-selected=true]').text().trim() == 'People') {
+                    clearInterval(interval);
+                    resolve();
+                }
+            }, 300);
+        });
+
+        promise.then(function() {
+            var stop = false;
+            $('h2').each(function() {
+                var t = $(this).text().trim();
+                if (t == 'Contacts' || t == 'Others') stop = true;
+            });
+            if (stop) {
+                Cookies.remove('ztau_people');
+                $('#people-unsearch').remove();
+            }
+
+            var people = [
+                { url: '/travel/area/bank', type: 'all' },
+                { url: '/travel/area/brig', type: 'all' },
+                { url: '/travel/area/clonevat', type: 'try' },
+                { url: '/travel/area/gaule-embassy', type: 'try' },
+                { url: '/travel/area/government-center', type: 'try' },
+                { url: '/travel/area/inn', type: 'try' },
+                { url: '/travel/area/bar', type: '/travel/area/inn' },
+                { url: '/travel/area/hotel-rooms', type: 'https://alpha.taustation.space/travel/area/inn' },
+                { url: '/travel/area/lounge', type: 'https://alpha.taustation.space/travel/area/inn' },
+                { url: '/travel/area/job-center', type: 'try' },
+                { url: '/area/career-advisory', type: 'https://alpha.taustation.space/travel/area/job-center' },
+                { url: '/area/side-jobs', type: 'https://alpha.taustation.space/travel/area/job-center' },
+                { url: '/area/discreet-work', type: '/travel/area/job-center' },
+                { url: '/area/market', type: 'try' },
+                { url: '/travel/area/vendors', type: '/area/market' },
+                { url: '/travel/area/electronic-market', type: '/area/market' },
+                { url: '/travel/area/storage', type: '/area/market' },
+                { url: '/area/port', type: 'all' },
+                { url: '/travel/area/shipping-bay', type: '/area/port' },
+                { url: '/travel/area/docks', type: '/area/port' },
+                { url: '/travel/area/local-shuttles', type: '/area/port' },
+                //{ url: '/travel/area/interstellar-shuttles', type: '/area/port' },
+                { url: '/area/residences', type: 'try' },
+                { url: '/area/ruins', type: 'try' },
+                { url: '/area/security', type: 'try' },
+                { url: '/area/sickbay', type: 'try' },
+                { url: '/area/training', type: 'try' },
+                { url: '/area/university', type: 'try' }
+            ];
+
+            var pos = Cookies.get('ztau_people');
+            if (pos === undefined) return;
+            pos = parseInt(pos);
+
+            for (var i = pos, l = people.length; i < l; i++) {
+                var area = people[i];
+                console.log(i + " " +  area);
+                if (
+                    area.type == 'all'
+                    || (area.type == 'try' && $('[href="' + area.url + '"]'))
+                    || ($('[href="' + area.type + '"]'))
+                ) {
+                    Cookies.set('ztau_people', parseInt(i)+1);
+                    location.href = area.url + '#/people';
+                    return;
+                }
+            }
+            Cookies.remove('ztau_people');
+            $('#people-unsearch').remove();
+        }, function() {});
+    }
+
+    function setup_search_for_people() {
+        $('#game_navigation_areas ul').prepend(
+              '<li><a href="#" id="people-search">👫 Search for people</a></li>'
+        ).find('#people-search').click(function() {
+            Cookies.set('ztau_people', 0);
+            search_for_people();
+        });
+
+        if (! (Cookies.get('ztau_people') === undefined)) search_for_people();
     }
 })();
 
