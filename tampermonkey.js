@@ -227,7 +227,7 @@
                 if (
                     area.type == 'all'
                     || (area.type == 'try' && $('[href="' + area.url + '"]'))
-                    || ($('[href="' + area.type + '"]'))
+                    || (area.type != 'try' && area.type != 'all' && $('[href="' + area.type + '"]'))
                 ) {
                     Cookies.set('ztau_people', parseInt(i)+1);
                     location.href = area.url + '#/people';
