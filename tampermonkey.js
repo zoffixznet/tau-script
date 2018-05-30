@@ -234,6 +234,7 @@
     }
 
     function setup_search_for_people() {
+        if (IS_ZTAU_DISABLED) return;
         $('#game_navigation_areas ul').prepend(
               '<li><a href="#" id="people-search">👫 Search for people</a></li>'
         ).find('#people-search').click(function() {
