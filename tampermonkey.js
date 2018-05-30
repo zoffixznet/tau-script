@@ -167,12 +167,10 @@
             var interval;
             interval = setInterval(function() {
                 console.log("trying to find people");
-                if ($('.tab-nav-item[aria-selected=true]').text().trim() == 'People'
-                    || $('[data-tab-target="people"] .tab-text-inner').text().trim() == 'People'
-                ) {
+                if ($('#people-count-msg')) {
                     console.log("found people");
                     clearInterval(interval);
-                    resolve();
+                    setTimeout(resolve, 500);
                 }
             }, 300);
         });
