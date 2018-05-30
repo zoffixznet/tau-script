@@ -61,14 +61,18 @@
     }
 
     function go_to_hotel() {
-        if (IS_ZTAU_DISABLED || ! (Cookies.get('ztau_people') === undefined)) return;
+        if (IS_ZTAU_DISABLED) return;
         $('#game_navigation_areas ul').prepend(
             '<li><a href="#" id="go_to_hotel">♥ Go to hotel</a></li>'
         );
         $('#go_to_hotel').click(function(){
             window.location.href = '/area/hotel-rooms/enter-room';
         });
-        if ($('[href="/area/hotel-rooms/enter-room"]') && $('[href="/area/hotel-rooms/enter-room"]').text() == 'Go to your hotel room') {
+        if (
+               $('[href="/area/hotel-rooms/enter-room"]').length
+            && $('[href="/area/hotel-rooms/enter-room"]').text() == 'Go to your hotel room'
+            && (Cookies.get('ztau_people') === undefined)
+        ) {
             console.log("Clicking");
             window.location.href = '/area/hotel-rooms/enter-room';
         }
@@ -162,7 +166,11 @@
         var promise = new Promise(function(resolve, reject) {
             var interval;
             interval = setInterval(function() {
-                if ($('.tab-nav-item[aria-selected=true]').text().trim() == 'People') {
+                console.log("trying to find people");
+                if ($('.tab-nav-item[aria-selected=true]').text().trim() == 'People'
+                    || $('[data-tab-target="people"] .tab-text-inner').text().trim() == 'People'
+                ) {
+                    console.log("found people");
                     clearInterval(interval);
                     resolve();
                 }
@@ -238,7 +246,8 @@
         $('#game_navigation_areas ul').prepend(
               '<li><a href="#" id="people-search">👫 Search for people</a></li>'
         ).find('#people-search').click(function() {
-            Cookies.set('ztau_people', 0);
+            Cookies.set('ztau_people', 1);
+            location.href = '/travel/area/bank#/people';
             search_for_people();
         });
 
