@@ -177,7 +177,7 @@
 
         promise.then(function() {
             var stop = false;
-            $('h2').each(function() {
+            $('.tab-content-people h2').each(function() {
                 var t = $(this).text().trim();
                 if (t == 'Contacts' || t == 'Others') stop = true;
             });
