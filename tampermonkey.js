@@ -190,6 +190,7 @@
                 { url: '/travel/area/bank', type: 'all' },
                 { url: '/travel/area/brig', type: 'all' },
                 { url: '/travel/area/clonevat', type: 'try' },
+                { url: '/travel/area/decommissioned-area', type: 'try' },
                 { url: '/travel/area/gaule-embassy', type: 'try' },
                 { url: '/travel/area/government-center', type: 'try' },
                 { url: '/travel/area/inn', type: 'try' },
