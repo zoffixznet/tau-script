@@ -213,6 +213,7 @@
                 { url: '/area/residences', type: 'try' },
                 { url: '/area/ruins', type: 'try' },
                 { url: '/area/security', type: 'try' },
+                { url: '/travel/area/shipyard', type: 'try' },
                 { url: '/area/sickbay', type: 'try' },
                 { url: '/area/training', type: 'try' },
                 { url: '/area/university', type: 'try' }
