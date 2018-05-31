@@ -167,7 +167,7 @@
             var interval;
             interval = setInterval(function() {
                 console.log("trying to find people");
-                if ($('#people-count-msg')) {
+                if ($('#people-count-msg').length) {
                     console.log("found people");
                     clearInterval(interval);
                     setTimeout(resolve, 500);
