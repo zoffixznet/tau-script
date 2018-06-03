@@ -155,13 +155,49 @@
         );
     }
 
+    function clear_search_for_people() {
+        Cookies.set('prev_ztau_people', Cookies.get('ztau_people'));
+        Cookies.remove('ztau_people');
+        $('#people-unsearch').remove();
+    }
+
+    var people = [
+        { url: '/travel/area/bank', type: 'all' },
+        { url: '/travel/area/brig', type: 'all' },
+        { url: '/travel/area/clonevat', type: 'try' },
+        { url: '/travel/area/decommissioned-area', type: 'try' },
+        { url: '/travel/area/gaule-embassy', type: 'try' },
+        { url: '/travel/area/government-center', type: 'try' },
+        { url: '/travel/area/inn', type: 'try' },
+        { url: '/travel/area/bar', type: '/travel/area/inn' },
+        { url: '/travel/area/hotel-rooms', type: '/travel/area/inn' },
+        { url: '/travel/area/lounge', type: '/travel/area/inn' },
+        { url: '/travel/area/job-center', type: 'try' },
+        { url: '/travel/area/career-advisory', type: '/travel/area/job-center' },
+        { url: '/travel/area/side-jobs', type: '/travel/area/job-center' },
+        { url: '/travel/area/discreet-work', type: '/travel/area/job-center' },
+        { url: '/travel/area/market', type: 'try' },
+        { url: '/travel/area/vendors', type: '/travel/area/market' },
+        { url: '/travel/area/electronic-market', type: '/travel/area/market' },
+        { url: '/travel/area/storage', type: '/travel/area/market' },
+        { url: '/travel/area/port', type: 'all' },
+        { url: '/travel/area/shipping-bay', type: '/travel/area/port' },
+        { url: '/travel/area/docks', type: '/travel/area/port' },
+        { url: '/travel/area/local-shuttles', type: '/travel/area/port' },
+        //{ url: '/travel/area/interstellar-shuttles', type: '/area/port' },
+        { url: '/travel/area/residences', type: 'try' },
+        { url: '/travel/area/ruins', type: 'try' },
+        { url: '/travel/area/security', type: 'try' },
+        { url: '/travel/area/shipyard', type: 'try' },
+        { url: '/travel/area/sickbay', type: 'try' },
+        { url: '/travel/area/training', type: 'try' },
+        { url: '/travel/area/university', type: 'try' }
+    ];
+
     function search_for_people() {
         $('#game_navigation_areas ul').prepend(
             '<li><a href="#" id="people-unsearch">👫 STOP Search for people</a></li>'
-        ).find('#people-unsearch').click(function(){
-            Cookies.remove('ztau_people');
-            $('#people-unsearch').remove();
-        });
+        ).find('#people-unsearch').click(clear_search_for_people);
 
         var promise = new Promise(function(resolve, reject) {
             var interval;
@@ -181,43 +217,7 @@
                 var t = $(this).text().trim();
                 if (t == 'Contacts' || t == 'Others') stop = true;
             });
-            if (stop) {
-                Cookies.remove('ztau_people');
-                $('#people-unsearch').remove();
-            }
-
-            var people = [
-                { url: '/travel/area/bank', type: 'all' },
-                { url: '/travel/area/brig', type: 'all' },
-                { url: '/travel/area/clonevat', type: 'try' },
-                { url: '/travel/area/decommissioned-area', type: 'try' },
-                { url: '/travel/area/gaule-embassy', type: 'try' },
-                { url: '/travel/area/government-center', type: 'try' },
-                { url: '/travel/area/inn', type: 'try' },
-                { url: '/travel/area/bar', type: '/travel/area/inn' },
-                { url: '/travel/area/hotel-rooms', type: '/travel/area/inn' },
-                { url: '/travel/area/lounge', type: '/travel/area/inn' },
-                { url: '/travel/area/job-center', type: 'try' },
-                { url: '/travel/area/career-advisory', type: '/travel/area/job-center' },
-                { url: '/travel/area/side-jobs', type: '/travel/area/job-center' },
-                { url: '/travel/area/discreet-work', type: '/travel/area/job-center' },
-                { url: '/travel/area/market', type: 'try' },
-                { url: '/travel/area/vendors', type: '/travel/area/market' },
-                { url: '/travel/area/electronic-market', type: '/travel/area/market' },
-                { url: '/travel/area/storage', type: '/travel/area/market' },
-                { url: '/travel/area/port', type: 'all' },
-                { url: '/travel/area/shipping-bay', type: '/travel/area/port' },
-                { url: '/travel/area/docks', type: '/travel/area/port' },
-                { url: '/travel/area/local-shuttles', type: '/travel/area/port' },
-                //{ url: '/travel/area/interstellar-shuttles', type: '/area/port' },
-                { url: '/travel/area/residences', type: 'try' },
-                { url: '/travel/area/ruins', type: 'try' },
-                { url: '/travel/area/security', type: 'try' },
-                { url: '/travel/area/shipyard', type: 'try' },
-                { url: '/travel/area/sickbay', type: 'try' },
-                { url: '/travel/area/training', type: 'try' },
-                { url: '/travel/area/university', type: 'try' }
-            ];
+            if (stop) clear_search_for_people();
 
             var pos = Cookies.get('ztau_people');
             if (pos === undefined) return;
@@ -236,8 +236,7 @@
                     return;
                 }
             }
-            Cookies.remove('ztau_people');
-            $('#people-unsearch').remove();
+            clear_search_for_people();
         }, function() {});
     }
 
@@ -245,10 +244,23 @@
         if (IS_ZTAU_DISABLED) return;
         $('#game_navigation_areas ul').prepend(
               '<li><a href="#" id="people-search">👫 Search for people</a></li>'
+            + '<li><a href="#" id="continue-people-search">👫 CONTINUE search for people</a></li>'
         ).find('#people-search').click(function() {
             Cookies.set('ztau_people', 1);
+            Cookies.set('prev_ztau_people', 1);
             location.href = '/travel/area/bank#/people';
             search_for_people();
+        }).end().find('#continue-people-search').click(function(){
+            var pos = Cookies.get('prev_ztau_people') || 1;
+            if (pos == 1) {
+                Cookies.set('ztau_people', pos);
+                location.href = '/travel/area/bank#/people';
+                search_for_people();
+            }
+            else {
+                Cookies.set('ztau_people', pos+1);
+                search_for_people();
+            }
         });
 
         if (! (Cookies.get('ztau_people') === undefined)) search_for_people();
